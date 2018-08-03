@@ -61,6 +61,15 @@ namespace AZE.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Working with Excel....
+        /// </summary>
+        public static string BusyWithExcel {
+            get {
+                return ResourceManager.GetString("BusyWithExcel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to &quot;{0}&quot; ist not recognized. Valid Parameters are:
         ///&quot;begin&quot;: begin attendance
         ///&quot;end&quot;: end attendance.
@@ -230,6 +239,15 @@ namespace AZE.Properties {
         public static string ToolTipSelectFile {
             get {
                 return ResourceManager.GetString("ToolTipSelectFile", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select the time table sheet.
+        /// </summary>
+        public static string WatermarkTipFile {
+            get {
+                return ResourceManager.GetString("WatermarkTipFile", resourceCulture);
             }
         }
         

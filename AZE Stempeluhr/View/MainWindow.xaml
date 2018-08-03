@@ -14,106 +14,111 @@
     <Window.DataContext>
         <viewModel:MainViewModel />
     </Window.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto"/>
-            <RowDefinition Height="*"/>
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="*"/>
-            <ColumnDefinition Width="Auto"/>
-        </Grid.ColumnDefinitions>
+    <xctk:BusyIndicator IsBusy="{Binding Running, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                        BusyContent="{x:Static properties:Resources.BusyWithExcel}">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
 
-        <TextBox HorizontalAlignment="Stretch" Height="23" Margin="5" VerticalAlignment="Center" IsReadOnly="True"
-                 Text="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
-                 ToolTip="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-        <Button Content="..." Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Margin="0,5,5,5" VerticalAlignment="Center" Width="25" 
+            <xctk:WatermarkTextBox HorizontalAlignment="Stretch" Height="23" Margin="5" VerticalAlignment="Center" IsReadOnly="True"
+                                   Text="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
+                                   Watermark="{x:Static properties:Resources.WatermarkTipFile}"
+                                   KeepWatermarkOnGotFocus="True"
+                                   ToolTip="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+            <Button Content="..." Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Margin="0,5,5,5" VerticalAlignment="Center" Width="25" 
                 ToolTip="{x:Static properties:Resources.ToolTipSelectFile}" 
                 Command="{Binding SelectFileCommand}"/>
 
-        <GroupBox Grid.ColumnSpan="2" Grid.Column="0" Header="{x:Static properties:Resources.GroupBoxHeaderAttendance}" 
+            <GroupBox Grid.ColumnSpan="2" Grid.Column="0" Header="{x:Static properties:Resources.GroupBoxHeaderAttendance}" 
                   HorizontalAlignment="Stretch" Margin="5,0,5,5" Grid.Row="1" VerticalAlignment="Stretch">
-            <Grid>
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                    <RowDefinition Height="Auto"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="5"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="5"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
 
-                <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Stretch" TextAlignment="Center" 
+                    <TextBlock Grid.ColumnSpan="3" HorizontalAlignment="Stretch" TextAlignment="Center" 
                            Text="{Binding Date, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="0" HorizontalAlignment="Stretch" FontSize="28" Margin="5,0,5,5" TextAlignment="Center" 
+                    <TextBlock Grid.Row="1" Grid.ColumnSpan="3" Grid.Column="0" HorizontalAlignment="Stretch" FontSize="28" Margin="5,0,5,5" TextAlignment="Center" 
                            Text="{Binding Time, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" FontSize="20" Margin="5,5,5,0" TextAlignment="Center" 
+                    <TextBlock Grid.Row="2" Grid.Column="0" HorizontalAlignment="Stretch" FontSize="20" Margin="5,5,5,0" TextAlignment="Center" 
                            Text="{Binding BeginTime, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch" FontSize="20" Margin="5,5,5,0" TextAlignment="Center" 
+                    <TextBlock Grid.Row="2" Grid.Column="2" HorizontalAlignment="Stretch" FontSize="20" Margin="5,5,5,0" TextAlignment="Center" 
                            Text="{Binding EndTime, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
 
-                <Button Content="{x:Static properties:Resources.TextBeginButton}" Margin="0,5" Grid.Row="3" Grid.Column="0" 
+                    <Button Content="{x:Static properties:Resources.TextBeginButton}" Margin="0,5" Grid.Row="3" Grid.Column="0" 
                         ToolTip="{x:Static properties:Resources.ToolTipBeginButton}" 
                         Command="{Binding SetBeginCommand}"/>
-                <Button Content="{x:Static properties:Resources.TextEndButton}"  Margin="0,5" Grid.Row="3" Grid.Column="2" 
+                    <Button Content="{x:Static properties:Resources.TextEndButton}"  Margin="0,5" Grid.Row="3" Grid.Column="2" 
                         ToolTip="{x:Static properties:Resources.ToolTipEndButton}" 
                         Command="{Binding SetEndCommand}"/>
 
-                <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right">
-                    <xctk:IntegerUpDown Margin="5" Width="75" Minimum="-60" Maximum="60" Increment="1" 
+                    <StackPanel Orientation="Horizontal" Grid.Row="5" Grid.Column="0" HorizontalAlignment="Right">
+                        <xctk:IntegerUpDown Margin="5" Width="75" Minimum="-60" Maximum="60" Increment="1" 
                                         Value="{Binding PauseMinutes, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
                                         ToolTip="{x:Static properties:Resources.ToolTipPauseUpDown}"/>
-                    <TextBlock TextAlignment="Center" VerticalAlignment="Center" 
+                        <TextBlock TextAlignment="Center" VerticalAlignment="Center" 
                                Text="{x:Static properties:Resources.TextMinutes}"/>
-                </StackPanel>
+                    </StackPanel>
 
-                <Button Content="{x:Static properties:Resources.TextPauseButton}" Margin="0,5" Grid.Row="5" Grid.Column="2" 
+                    <Button Content="{x:Static properties:Resources.TextPauseButton}" Margin="0,5" Grid.Row="5" Grid.Column="2" 
                         ToolTip="{x:Static properties:Resources.ToolTipPauseButton}" 
                         Command="{Binding AddPauseCommand}"/>
 
-                <Border Grid.Row="6" Grid.ColumnSpan="3" Grid.Column="0" Margin="0,10,0,0" BorderThickness="1" 
+                    <Border Grid.Row="6" Grid.ColumnSpan="3" Grid.Column="0" Margin="0,10,0,0" BorderThickness="1" 
                         BorderBrush="DarkGray" CornerRadius="3" Background="LightGoldenrodYellow"
                         ToolTip="{x:Static properties:Resources.ToolTipCurrentValues}">
-                    <Grid>
-                        <Grid.RowDefinitions>
-                            <RowDefinition Height="Auto"/>
-                            <RowDefinition Height="Auto"/>
-                        </Grid.RowDefinitions>
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                            <ColumnDefinition Width="*"/>
-                        </Grid.ColumnDefinitions>
+                        <Grid>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition Height="Auto"/>
+                            </Grid.RowDefinitions>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
 
-                        <TextBlock Text="{x:Static properties:Resources.LabelRow}" HorizontalAlignment="Center" FontWeight="Medium"/>
-                        <TextBlock Text="{x:Static properties:Resources.LabelBegin}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontWeight="Medium"/>
-                        <TextBlock Text="{x:Static properties:Resources.LabelEnd}" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Medium"/>
-                        <TextBlock Text="{x:Static properties:Resources.LabelPause}" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" FontWeight="Medium"/>
-                        <TextBlock Text="{x:Static properties:Resources.LabelNetWork}" Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" FontWeight="Medium"/>
+                            <TextBlock Text="{x:Static properties:Resources.LabelRow}" HorizontalAlignment="Center" FontWeight="Medium"/>
+                            <TextBlock Text="{x:Static properties:Resources.LabelBegin}" Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" FontWeight="Medium"/>
+                            <TextBlock Text="{x:Static properties:Resources.LabelEnd}" Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" FontWeight="Medium"/>
+                            <TextBlock Text="{x:Static properties:Resources.LabelPause}" Grid.Row="0" Grid.Column="3" HorizontalAlignment="Center" FontWeight="Medium"/>
+                            <TextBlock Text="{x:Static properties:Resources.LabelNetWork}" Grid.Row="0" Grid.Column="4" HorizontalAlignment="Center" FontWeight="Medium"/>
 
-                        <TextBlock Text="{Binding CurrentAzeData.RowNumber, FallbackValue={}-, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBlock Text="{Binding CurrentAzeData.RowNumber, FallbackValue={}-, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                                    Grid.Row="1" Grid.Column="0" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding CurrentAzeData.BeginText, FallbackValue={}-, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBlock Text="{Binding CurrentAzeData.BeginText, FallbackValue={}-, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                                    Grid.Row="1" Grid.Column="1" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding CurrentAzeData.EndText, FallbackValue={}-, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBlock Text="{Binding CurrentAzeData.EndText, FallbackValue={}-, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                                    Grid.Row="1" Grid.Column="2" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding CurrentAzeData.PauseText, FallbackValue={}-, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBlock Text="{Binding CurrentAzeData.PauseText, FallbackValue={}-, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                                    Grid.Row="1" Grid.Column="3" HorizontalAlignment="Center"/>
-                        <TextBlock Text="{Binding CurrentAzeData.WorkingTimeText, FallbackValue={}-, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
+                            <TextBlock Text="{Binding CurrentAzeData.WorkingTimeText, FallbackValue={}-, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" 
                                    Grid.Row="1" Grid.Column="4" HorizontalAlignment="Center"/>
-                    </Grid>
-                </Border>
+                        </Grid>
+                    </Border>
 
-            </Grid>
-        </GroupBox>
-    </Grid>
+                </Grid>
+            </GroupBox>
+        </Grid>
+    </xctk:BusyIndicator>
 </Window>
