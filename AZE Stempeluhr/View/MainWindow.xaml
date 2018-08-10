@@ -1,4 +1,4 @@
-﻿<Window
+﻿<Window x:Class="AZE.View.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:AZE.View"
         xmlns:properties="clr-namespace:AZE.Properties"
         xmlns:viewModel="clr-namespace:AZE.ViewModel"
-        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit" x:Class="AZE.View.MainWindow"
+        xmlns:xctk="http://schemas.xceed.com/wpf/xaml/toolkit"
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModel:MainViewModel}"
         Title="{x:Static properties:Resources.WindowTitle}" Height="300" Width="500" SizeToContent="Height" Icon="../date_and_time_clock.ico" 
@@ -24,6 +24,7 @@
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*"/>
                 <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
             <xctk:WatermarkTextBox HorizontalAlignment="Stretch" Height="23" Margin="5" VerticalAlignment="Center" IsReadOnly="True"
@@ -31,11 +32,17 @@
                                    Watermark="{x:Static properties:Resources.WatermarkTipFile}"
                                    KeepWatermarkOnGotFocus="True"
                                    ToolTip="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
-            <Button Content="..." Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Margin="0,5,5,5" VerticalAlignment="Center" Width="25" 
+            <Button Content="..." Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Margin="0,5,5,5" VerticalAlignment="Center" Width="25" Height="22" 
                 ToolTip="{x:Static properties:Resources.ToolTipSelectFile}" 
                 Command="{Binding SelectFileCommand}"/>
+            <Button Grid.Row="0" Grid.Column="2" HorizontalAlignment="Center" Margin="0,5,5,5" VerticalAlignment="Center" Width="25" Height="22" 
+                    HorizontalContentAlignment="Center"
+                    ToolTip="{x:Static properties:Resources.ToolTipSwitchLanguage}" 
+                    Command="{Binding SwitchLanguageCommand}">
+                <Image Source="{Binding SwitchLanguageFlag}" Height="16" Width="16"/>
+            </Button>
 
-            <GroupBox Grid.ColumnSpan="2" Grid.Column="0" Header="{x:Static properties:Resources.GroupBoxHeaderAttendance}" 
+            <GroupBox Grid.ColumnSpan="3" Grid.Column="0" Header="{x:Static properties:Resources.GroupBoxHeaderAttendance}" 
                   HorizontalAlignment="Stretch" Margin="5,0,5,5" Grid.Row="1" VerticalAlignment="Stretch">
                 <Grid>
                     <Grid.RowDefinitions>

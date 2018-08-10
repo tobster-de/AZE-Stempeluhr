@@ -179,6 +179,9 @@
   <data name="ToolTipSelectFile" xml:space="preserve">
     <value>Aktuelle Arbeitszeittabelle auswählen.</value>
   </data>
+  <data name="ToolTipSwitchLanguage" xml:space="preserve">
+    <value>Sprache auf Englisch umstellen</value>
+  </data>
   <data name="WatermarkTipFile" xml:space="preserve">
     <value>Bitte Arbeitszeittabelle wählen</value>
   </data>

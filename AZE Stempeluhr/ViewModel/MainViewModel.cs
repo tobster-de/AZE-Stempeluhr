@@ -1,12 +1,15 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
+using System.Windows.Media;
 using AZE.Impl;
 using AZE.Properties;
+using AZE.Resources;
 using Microsoft.Win32;
 using WpfBasics;
 
@@ -41,6 +44,8 @@ namespace AZE.ViewModel
 
         private ActionCommand addPauseCommand;
 
+        private ActionCommand switchLanguageCommand;
+
         private int precision = 5;
 
         #endregion
@@ -58,6 +63,7 @@ namespace AZE.ViewModel
                 this.setEndCommand?.TriggerExecuteChange();
                 this.addPauseCommand?.TriggerExecuteChange();
                 this.selectFileCommand?.TriggerExecuteChange();
+                this.switchLanguageCommand?.TriggerExecuteChange();
             }
         }
 
@@ -88,6 +94,19 @@ namespace AZE.ViewModel
             {
                 this.SetValue(ref this.pauseMinutes, value);
                 this.StoreSettings();
+            }
+        }
+
+        public ImageSource SwitchLanguageFlag
+        {
+            get
+            {
+                if (Settings.Default.Culture.Contains("de"))
+                {
+                    return FlagIcons.English.Source;
+                }
+
+                return FlagIcons.German.Source;
             }
         }
 
@@ -125,6 +144,31 @@ namespace AZE.ViewModel
             {
                 return this.addPauseCommand ?? (this.addPauseCommand = new ActionCommand(() => this.ExecuteAddPauseCommand(), () => !this.Running));
             }
+        }
+
+        public ICommand SwitchLanguageCommand
+        {
+            get
+            {
+                return this.switchLanguageCommand ?? (this.switchLanguageCommand = new ActionCommand(() => this.ExecuteSwitchLanguageCommand(), () => !this.Running));
+            }
+        }
+
+        private void ExecuteSwitchLanguageCommand()
+        {
+            if ((Settings.Default.Culture?.ToLower().Contains("de")).GetValueOrDefault())
+            {
+                Settings.Default.Culture = "en";
+            }
+            else
+            {
+                Settings.Default.Culture = "de";
+            }
+
+            Settings.Default.Save();
+
+            Process.Start(Process.GetCurrentProcess().MainModule.FileName);
+            Application.Current.Shutdown();
         }
 
         #endregion

@@ -1,10 +1,13 @@
 ﻿using System;
+using System.Globalization;
 using System.Linq;
+using System.Threading;
 using System.Windows;
 using AZE.Impl;
 using AZE.View;
 using AZE.ViewModel;
 using Res = AZE.Properties.Resources;
+using Set = AZE.Properties.Settings;
 
 namespace AZE
 {
@@ -15,8 +18,22 @@ namespace AZE
     {
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(Set.Default.Culture))
+            {
+                Set.Default.Culture = "en";
+                Set.Default.Save();
+            }
+
             if (e.Args.Length == 0)
             {
+                CultureInfo culture = Set.Default.Culture.Contains("de") ? CultureInfo.CreateSpecificCulture("de") : CultureInfo.CreateSpecificCulture("en");
+
+                Thread.CurrentThread.CurrentCulture = culture;
+                Thread.CurrentThread.CurrentUICulture = culture;
+
+                CultureInfo.DefaultThreadCurrentCulture = culture;
+                CultureInfo.DefaultThreadCurrentUICulture = culture;
+
                 new MainWindow().Show();
             }
             else

@@ -243,6 +243,15 @@ namespace AZE.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Switch language to german.
+        /// </summary>
+        public static string ToolTipSwitchLanguage {
+            get {
+                return ResourceManager.GetString("ToolTipSwitchLanguage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Please select the time table sheet.
         /// </summary>
         public static string WatermarkTipFile {

@@ -179,6 +179,9 @@
   <data name="ToolTipSelectFile" xml:space="preserve">
     <value>Select current time table sheet</value>
   </data>
+  <data name="ToolTipSwitchLanguage" xml:space="preserve">
+    <value>Switch language to german</value>
+  </data>
   <data name="WatermarkTipFile" xml:space="preserve">
     <value>Please select the time table sheet</value>
   </data>
