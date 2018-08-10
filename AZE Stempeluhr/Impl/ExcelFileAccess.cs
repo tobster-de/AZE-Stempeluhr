@@ -110,7 +110,8 @@ namespace AZE.Impl
                 Excel.Range rowData = (Excel.Range)this.excelWorksheet.Rows[rowNumber];
 
                 // remove everything except hour / minute
-                double targetTime = time.AddSeconds(-time.Second).ToOADate();
+                double targetTime = time.AddSeconds(-time.Second).AddMilliseconds(-time.Millisecond).ToOADate();
+                // removes the date part
                 targetTime = targetTime - Math.Truncate(targetTime);
                 rowData.Cells[8 + timeValue].Value = targetTime;
 
