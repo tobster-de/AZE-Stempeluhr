@@ -14,6 +14,27 @@
     <Window.DataContext>
         <viewModel:MainViewModel />
     </Window.DataContext>
+    <Window.Resources>
+        <!-->NullToVisibilityConverter</-->
+        <local:EverythingConverter x:Key="ntvc">
+            <local:EverythingConverter.NullResultValue>
+                <Visibility>Visible</Visibility>
+            </local:EverythingConverter.NullResultValue>
+            <local:EverythingConverter.NotNullResultValue>
+                <Visibility>Collapsed</Visibility>
+            </local:EverythingConverter.NotNullResultValue>
+        </local:EverythingConverter>
+        <!-->NotNullToVisibilityConverter</-->
+        <local:EverythingConverter x:Key="nntvc">
+            <local:EverythingConverter.NullResultValue>
+                <Visibility>Collapsed</Visibility>
+            </local:EverythingConverter.NullResultValue>
+            <local:EverythingConverter.NotNullResultValue>
+                <Visibility>Visible</Visibility>
+            </local:EverythingConverter.NotNullResultValue>
+        </local:EverythingConverter>
+    </Window.Resources>
+
     <xctk:BusyIndicator IsBusy="{Binding Running, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                         BusyContent="{x:Static properties:Resources.BusyWithExcel}">
         <Grid>
@@ -27,11 +48,23 @@
                 <ColumnDefinition Width="Auto"/>
             </Grid.ColumnDefinitions>
 
-            <xctk:WatermarkTextBox HorizontalAlignment="Stretch" Height="23" Margin="5" VerticalAlignment="Center" IsReadOnly="True"
+            <!--<xctk:WatermarkTextBox HorizontalAlignment="Stretch" Height="23" Margin="5" VerticalAlignment="Center" IsReadOnly="True"
                                    Text="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"
                                    Watermark="{x:Static properties:Resources.WatermarkTipFile}"
                                    KeepWatermarkOnGotFocus="True"
-                                   ToolTip="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                                   ToolTip="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>-->
+            <TextBlock HorizontalAlignment="Stretch" Margin="5,0" VerticalAlignment="Center"
+                       Visibility="{Binding FileName, Converter={StaticResource nntvc}}"
+                       ToolTip="{Binding FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}">
+                <Hyperlink Command="{Binding OpenFileCommand}">
+                    <Run Text="{Binding FileNameShort, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}"/>
+                </Hyperlink>
+            </TextBlock>
+            <TextBlock HorizontalAlignment="Right" Margin="5,0" VerticalAlignment="Center"
+                       Grid.Row="0" Grid.Column="0" Foreground="DarkGray"
+                       Visibility="{Binding FileName, Converter={StaticResource ntvc}}"
+                       Text="{x:Static properties:Resources.WatermarkTipFile}">
+            </TextBlock>
             <Button Content="..." Grid.Row="0" Grid.Column="1" HorizontalAlignment="Center" Margin="0,5,5,5" VerticalAlignment="Center" Width="25" Height="22" 
                 ToolTip="{x:Static properties:Resources.ToolTipSelectFile}" 
                 Command="{Binding SelectFileCommand}"/>
@@ -127,5 +160,6 @@
                 </Grid>
             </GroupBox>
         </Grid>
+
     </xctk:BusyIndicator>
 </Window>

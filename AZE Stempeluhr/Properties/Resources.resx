@@ -183,7 +183,7 @@
     <value>Switch language to german</value>
   </data>
   <data name="WatermarkTipFile" xml:space="preserve">
-    <value>Please select the time table sheet</value>
+    <value>Please select the time table sheet ➔</value>
   </data>
   <data name="WindowTitle" xml:space="preserve">
     <value>AZE attendance clock</value>

@@ -48,6 +48,8 @@ namespace AZE.ViewModel
 
         private int precision = 5;
 
+        private ActionCommand openFileCommand;
+
         #endregion
 
         #region Binding properties
@@ -70,8 +72,14 @@ namespace AZE.ViewModel
         public string FileName
         {
             get => this.fileName;
-            set => this.SetValue(ref this.fileName, value);
+            set
+            {
+                this.SetValue(ref this.fileName, value);
+                this.OnPropertyChanged(() => this.FileNameShort);
+            }
         }
+
+        public string FileNameShort => Path.GetFileName(this.FileName);
 
         public string Date { get; set; }
 
@@ -152,6 +160,20 @@ namespace AZE.ViewModel
             {
                 return this.switchLanguageCommand ?? (this.switchLanguageCommand = new ActionCommand(() => this.ExecuteSwitchLanguageCommand(), () => !this.Running));
             }
+        }
+
+        public ICommand OpenFileCommand
+        {
+            get
+            {
+                return this.openFileCommand ?? (this.openFileCommand = new ActionCommand(() => this.ExecuteOpenFileCommand(), () => !string.IsNullOrWhiteSpace(this.FileName)));
+            }
+        }
+
+        private void ExecuteOpenFileCommand()
+        {
+            //System.Diagnostics.Process.Start("explorer.exe", $"/select,{this.FileName}");
+            System.Diagnostics.Process.Start(this.FileName);
         }
 
         private void ExecuteSwitchLanguageCommand()

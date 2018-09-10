@@ -252,7 +252,7 @@ namespace AZE.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select the time table sheet.
+        ///   Looks up a localized string similar to Please select the time table sheet ➔.
         /// </summary>
         public static string WatermarkTipFile {
             get {
