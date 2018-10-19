@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Media.TextFormatting;
 
 namespace AZE.Impl
 {
@@ -25,7 +26,7 @@ namespace AZE.Impl
 
         public DateTime? Pause { get; }
 
-        public string PauseText => this.Pause?.ToShortTimeString() ?? "-";
+        public string PauseText => !this.Pause.HasValue ? "-" : (this.Pause.Value - this.Pause.Value.Date).ToString(@"hh\:mm");
 
         public DateTime? WorkingTime { get; }
 

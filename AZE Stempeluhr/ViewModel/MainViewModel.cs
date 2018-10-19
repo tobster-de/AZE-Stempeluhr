@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Shell;
 using AZE.Impl;
 using AZE.Properties;
 using AZE.Resources;
@@ -50,9 +51,34 @@ namespace AZE.ViewModel
 
         private ActionCommand openFileCommand;
 
+        private double taskBarProgressValue = 0;
+
+        private TaskbarItemProgressState taskBarProgressState;
+
+        private ICommand activatedCommand;
+
         #endregion
 
         #region Binding properties
+
+
+        /// <summary>
+        ///     Progress value for task bar item
+        /// </summary>
+        public double TaskBarProgressValue
+        {
+            get => this.taskBarProgressValue;
+            set => this.SetValue(ref this.taskBarProgressValue, value);
+        }
+
+        /// <summary>
+        ///     Progress value for task bar item
+        /// </summary>
+        public TaskbarItemProgressState TaskBarProgressState
+        {
+            get => this.taskBarProgressState;
+            set => this.SetValue(ref this.taskBarProgressState, value);
+        }
 
         public bool Running
         {
@@ -122,76 +148,26 @@ namespace AZE.ViewModel
 
         #region Commands
 
-        public ICommand SelectFileCommand
-        {
-            get
-            {
-                return this.selectFileCommand ?? (this.selectFileCommand = new ActionCommand(() => this.ExecuteSelectFileCommand(), () => !this.Running));
-            }
-        }
+        public ICommand SelectFileCommand 
+            => this.selectFileCommand ?? (this.selectFileCommand = new ActionCommand(this.ExecuteSelectFileCommand, () => !this.Running));
 
-        public ICommand SetBeginCommand
-        {
-            get
-            {
-                return this.setBeginCommand ?? (this.setBeginCommand = new ActionCommand(() => this.ExecuteSetBeginCommand(), () => !this.Running));
-            }
-        }
+        public ICommand SetBeginCommand 
+            => this.setBeginCommand ?? (this.setBeginCommand = new ActionCommand(this.ExecuteSetBeginCommand, () => !this.Running));
 
-        public ICommand SetEndCommand
-        {
-            get
-            {
-                return this.setEndCommand ?? (this.setEndCommand = new ActionCommand(() => this.ExecuteSetEndCommand(), () => !this.Running));
-            }
-        }
+        public ICommand SetEndCommand 
+            => this.setEndCommand ?? (this.setEndCommand = new ActionCommand(this.ExecuteSetEndCommand, () => !this.Running));
 
-        public ICommand AddPauseCommand
-        {
-            get
-            {
-                return this.addPauseCommand ?? (this.addPauseCommand = new ActionCommand(() => this.ExecuteAddPauseCommand(), () => !this.Running));
-            }
-        }
+        public ICommand AddPauseCommand 
+            => this.addPauseCommand ?? (this.addPauseCommand = new ActionCommand(this.ExecuteAddPauseCommand, () => !this.Running));
 
-        public ICommand SwitchLanguageCommand
-        {
-            get
-            {
-                return this.switchLanguageCommand ?? (this.switchLanguageCommand = new ActionCommand(() => this.ExecuteSwitchLanguageCommand(), () => !this.Running));
-            }
-        }
+        public ICommand SwitchLanguageCommand 
+            => this.switchLanguageCommand ?? (this.switchLanguageCommand = new ActionCommand(this.ExecuteSwitchLanguageCommand, () => !this.Running));
 
-        public ICommand OpenFileCommand
-        {
-            get
-            {
-                return this.openFileCommand ?? (this.openFileCommand = new ActionCommand(() => this.ExecuteOpenFileCommand(), () => !string.IsNullOrWhiteSpace(this.FileName)));
-            }
-        }
+        public ICommand OpenFileCommand 
+            => this.openFileCommand ?? (this.openFileCommand = new ActionCommand(this.ExecuteOpenFileCommand, () => !string.IsNullOrWhiteSpace(this.FileName)));
 
-        private void ExecuteOpenFileCommand()
-        {
-            //System.Diagnostics.Process.Start("explorer.exe", $"/select,{this.FileName}");
-            System.Diagnostics.Process.Start(this.FileName);
-        }
-
-        private void ExecuteSwitchLanguageCommand()
-        {
-            if ((Settings.Default.Culture?.ToLower().Contains("de")).GetValueOrDefault())
-            {
-                Settings.Default.Culture = "en";
-            }
-            else
-            {
-                Settings.Default.Culture = "de";
-            }
-
-            Settings.Default.Save();
-
-            Process.Start(Process.GetCurrentProcess().MainModule.FileName);
-            Application.Current.Shutdown();
-        }
+        public ICommand ActivatedCommand
+            => this.activatedCommand ?? (this.activatedCommand = new ActionCommand(this.ExecuteActivatedCommand, () => !this.Running));
 
         #endregion
 
@@ -243,6 +219,12 @@ namespace AZE.ViewModel
 
         #region Command implementation
 
+        private void ExecuteOpenFileCommand()
+        {
+            //System.Diagnostics.Process.Start("explorer.exe", $"/select,{this.FileName}");
+            System.Diagnostics.Process.Start(this.FileName);
+        }
+
         private void ExecuteSelectFileCommand()
         {
             OpenFileDialog ofd = new OpenFileDialog();
@@ -281,6 +263,33 @@ namespace AZE.ViewModel
             this.AddPause(this.PauseMinutes);
         }
 
+        private void ExecuteSwitchLanguageCommand()
+        {
+            if ((Settings.Default.Culture?.ToLower().Contains("de")).GetValueOrDefault())
+            {
+                Settings.Default.Culture = "en";
+            }
+            else
+            {
+                Settings.Default.Culture = "de";
+            }
+
+            Settings.Default.Save();
+
+            Process.Start(Process.GetCurrentProcess().MainModule.FileName);
+            Application.Current.Shutdown();
+        }
+
+        private void ExecuteActivatedCommand()
+        {
+            if (this.Running)
+            {
+                return;
+            }
+
+            this.UpdateTaskBar(TaskbarItemProgressState.None);
+        }
+
         #endregion
 
         #region Methods
@@ -317,6 +326,29 @@ namespace AZE.ViewModel
             settings.Save();
         }
 
+        private void UpdateTaskBar(TaskbarItemProgressState state)
+        {
+            Debug.WriteLine($"{state} ({this.Running})");
+
+            switch (state)
+            {
+                case TaskbarItemProgressState.None:
+                case TaskbarItemProgressState.Indeterminate:
+                    this.TaskBarProgressValue = 0;
+                    break;
+                case TaskbarItemProgressState.Normal:
+                case TaskbarItemProgressState.Error:
+                    this.TaskBarProgressValue = 1;
+                    break;
+                case TaskbarItemProgressState.Paused:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(state), state, null);
+            }
+
+            this.TaskBarProgressState = state;
+        }
+
         internal void CalculateBeginAndEnd(DateTime time, out DateTime begin, out DateTime end)
         {
             int plus = 0, minus = 0;
@@ -344,10 +376,18 @@ namespace AZE.ViewModel
                     try
                     {
                         this.Running = true;
+                        this.UpdateTaskBar(TaskbarItemProgressState.Indeterminate);
+
                         using (ExcelFileAccess aze = ExcelFileAccess.OpenReadOnly(this.FileName))
                         {
                             this.CurrentAzeData = aze.FindData(DateTime.Today);
                         }
+
+                        this.UpdateTaskBar(TaskbarItemProgressState.Normal);
+                    }
+                    catch (Exception)
+                    {
+                        this.UpdateTaskBar(TaskbarItemProgressState.Error);
                     }
                     finally
                     {
@@ -380,7 +420,8 @@ namespace AZE.ViewModel
                 {
                     try
                     {
-                        this.Running = true;
+                        this.UpdateTaskBar(TaskbarItemProgressState.Indeterminate);
+
                         using (ExcelFileAccess aze = ExcelFileAccess.OpenFullAccess(this.FileName))
                         {
                             if (aze.SetTime(this.CurrentAzeData.RowNumber, timeValue, time))
@@ -388,6 +429,12 @@ namespace AZE.ViewModel
                                 this.CurrentAzeData = aze.FindData(DateTime.Today, this.CurrentAzeData.RowNumber);
                             }
                         }
+
+                        this.UpdateTaskBar(TaskbarItemProgressState.Normal);
+                    }
+                    catch (Exception)
+                    {
+                        this.UpdateTaskBar(TaskbarItemProgressState.Error);
                     }
                     finally
                     {
@@ -410,7 +457,8 @@ namespace AZE.ViewModel
                 {
                     try
                     {
-                        this.Running = true;
+                        this.UpdateTaskBar(TaskbarItemProgressState.Indeterminate);
+
                         using (ExcelFileAccess aze = ExcelFileAccess.OpenFullAccess(this.FileName))
                         {
                             if (aze.AddPause(this.CurrentAzeData.RowNumber, minutes))
@@ -418,6 +466,12 @@ namespace AZE.ViewModel
                                 this.CurrentAzeData = aze.FindData(DateTime.Today, this.CurrentAzeData.RowNumber);
                             }
                         }
+
+                        this.UpdateTaskBar(TaskbarItemProgressState.Normal);
+                    }
+                    catch (Exception)
+                    {
+                        this.UpdateTaskBar(TaskbarItemProgressState.Error);
                     }
                     finally
                     {

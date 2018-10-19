@@ -10,7 +10,8 @@
         mc:Ignorable="d"
         d:DataContext="{d:DesignInstance viewModel:MainViewModel}"
         Title="{x:Static properties:Resources.WindowTitle}" Height="300" Width="500" SizeToContent="Height" Icon="../date_and_time_clock.ico" 
-        ResizeMode="NoResize" WindowStartupLocation="CenterScreen">
+        ResizeMode="NoResize" WindowStartupLocation="CenterScreen"
+        local:ActivatedBehavior.Activated="{Binding ActivatedCommand}">
     <Window.DataContext>
         <viewModel:MainViewModel />
     </Window.DataContext>
@@ -162,4 +163,31 @@
         </Grid>
 
     </xctk:BusyIndicator>
+
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo x:Name="taskBarItemInfo1" 
+                         ProgressValue="{Binding TaskBarProgressValue, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                         ProgressState="{Binding TaskBarProgressState, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}"
+                         Description="Status">
+            <!--
+            Overlay="{StaticResource ResourceKey=StopImage}"
+            
+            <TaskbarItemInfo.ThumbButtonInfos>
+                <ThumbButtonInfoCollection>
+                    <ThumbButtonInfo
+                        DismissWhenClicked="False"
+                        Command="MediaCommands.Play"
+                        CommandTarget="{Binding ElementName=btnPlay}"
+                        Description="Play"
+                        ImageSource="{StaticResource ResourceKey=PlayImage}"/>
+                    <ThumbButtonInfo
+                        DismissWhenClicked="True"
+                        Command="MediaCommands.Stop"
+                        CommandTarget="{Binding ElementName=btnStop}"
+                        Description="Stop"
+                        ImageSource="{StaticResource ResourceKey=StopImage}"/>
+                </ThumbButtonInfoCollection>
+            </TaskbarItemInfo.ThumbButtonInfos>-->
+        </TaskbarItemInfo>
+    </Window.TaskbarItemInfo>
 </Window>
